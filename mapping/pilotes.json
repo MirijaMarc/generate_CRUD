@@ -1,0 +1,10 @@
+{
+    "object":{
+        "nom_pilote" : "nom",
+        "date_naissance": "date",
+        "idgenre": "genre"
+    },
+    "view": false
+    
+
+}

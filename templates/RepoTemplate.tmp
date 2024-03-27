@@ -1,0 +1,24 @@
+package [package].Repository;
+
+[imports]
+
+import [package].entity.[NomModeleUpper];
+
+@Repository
+public interface [NomModeleUpper]Repository extends JpaRepository<[NomModeleUpper], Integer> {
+    
+    @Query(nativeQuery = true, value = """
+        SELECT * FROM [NomModeleLowerPluriel] where etat_[NomModeleLower]>=0    
+            """)
+    public Page<[NomModeleUpper]> findAll(Pageable pageable);
+
+    @Query(nativeQuery = true, value = """
+        SELECT * FROM [NomModeleLowerPluriel] where etat_[NomModeleLower]>=0    
+            """)
+    public List<[NomModeleUpper]> findAll();
+
+    @Query(nativeQuery = true, value = """
+            UPDATE [NomModeleLowerPluriel] set etat_[NomModeleLower]= -10 where id_[NomModeleLower]= :id RETURNING *
+            """)
+    public [NomModeleUpper] delete(int id);
+}

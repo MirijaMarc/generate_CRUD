@@ -1,0 +1,6 @@
+<div class="col-12">
+    <label class="form-label">[label]</label>
+    <select class="form-select" name="[name]">
+        <option th:each=" element : ${[data]}" th:value="${element.id}" th:text="${element.nom}"></option>
+    </select>
+</div>

@@ -1,0 +1,24 @@
+{
+    "packageName": "com.test_eval",
+    "packagePath": "E:/Mirija/ITU/S5/MrRojo/TEST/eval/eval_test/src/main/java/com/test_eval",
+    "MotCle":{
+        "NomModeleUpper": "[NomModeleUpper]",
+        "NomModeleLower": "[NomModeleLower]",
+        "NomModeleLowerPluriel": "[NomModeleLowerPluriel]",
+        "NomModeleUpperPluriel": "[NomModeleUpperPluriel]",
+        "AttributsDTO": "[AttributsDTO]",
+        "AttributsEntity": "[AttributsEntity]",
+        "Setters": "[Setters]",
+        "InputsAjouter": "[InputsAjouter]",
+        "InputsModifier": "[InputsModifier]",
+        "LignesTable": "[LigneTables]"
+    },
+    "Extension":{
+        "java": ".java",
+        "html": ".html"
+    },
+    "Conversion":{
+        "LocalDate": "yyyy-MM-dd",
+        "LocalDateTime": "yyyy-MM-dd hh:mm:ss"
+    }
+}

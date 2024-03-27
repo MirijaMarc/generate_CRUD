@@ -1,0 +1,4 @@
+<div class="col-12">
+    <label class="form-label">[label]</label>
+    <input type="datetime" class="form-control" th:value="${element.[name]}" name="[name]">
+</div>

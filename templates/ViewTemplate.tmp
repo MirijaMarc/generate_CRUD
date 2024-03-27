@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html
+    layout:decorate="~{layouts/layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}"></title>
+</head>
+<body>
+    <main id="main" class="main" layout:fragment="main">
+        <section class="section">
+            <div class="row">
+              <div class="col-lg-6">
+    
+                <div class="card">
+                  <div class="card-body">
+                    <button type="button" class="btn btn-primary mt-2"  data-bs-toggle="modal" data-bs-target="#basicModal">Importer</button>
+                    <div class="modal fade" id="basicModal" tabindex="-1">
+                      <form action="/[NomModeleLowerPluriel]/import-csv" method="post" enctype="multipart/form-data">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Importer fichier</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                              <div class="col-12">
+                                <label class="form-label">Fichier</label>
+                                <input type="file" class="form-control" name="file">
+                              </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </div>
+                      </div>
+                      </form>
+                    </div><!-- End Basic Modal-->
+                    <h5 class="card-title">Insertion</h5>
+                    <form action="/[NomModeleLowerPluriel]" method="post" class="row g-3">
+                      [InputsAjouter]
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Insérer</button>
+                        <button type="reset" class="btn btn-secondary">Reset</button>
+                      </div>
+                    </form>
+      
+                  </div>
+                </div>
+      
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-lg-12">
+      
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Liste [NomModeleUpperPluriel]</h5>
+                    <table class="table">
+                      <thead>
+                        <tr>
+[EnteteTable]
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr th:each=" element : ${[NomModeleLowerPluriel]}">
+[LigneTables]
+                          <td>
+                            <a data-bs-toggle="modal" th:data-bs-target= "'#modifier-' + ${element.id}" type="button" class="btn btn-primary btn-sm">Modifier</a>
+                            <a data-bs-toggle="modal" th:data-bs-target= "'#supprimer-' + ${element.id}" type="button" class="btn btn-danger btn-sm">Supprimer</a>                            
+                          </td>
+                        <div class="modal fade" th:id = "'modifier-' + ${element.id}" tabindex="-1">
+                          <form action="/[NomModeleLowerPluriel]/update" method="post" class="row g-3">
+                            <input type="hidden" th:value = "${element.id}" name="id">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" th:text="'Modification du [NomModeleLower] N° ' + ${element.id}"></h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  [InputsModifier]
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-warning">Modifier</button>
+                                </div>
+                              </div>
+                            </div>
+                        </form>
+                        </div>
+
+                        <div class="modal fade" th:id = "'supprimer-'+ ${element.id}" tabindex="-1">
+                          <form action="/[NomModeleLowerPluriel]/delete" method="post" class="row g-3">
+                            <input type="hidden" th:value ="${element.id}" name="id">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" th:text="'Suppression du [NomModeleLower] N° ' + ${element.id}"></h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  Voulez vous vraiment Supprimer ?
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </tr>
+
+                      </tbody>
+                    </table>
+
+                    <nav aria-label="Page navigation">
+                      <ul class="pagination">
+                          <li class="page-item" th:if="${currentPage > 0}">
+                              <a class="page-link" th:href="@{[NomModeleLowerPluriel](page=0)}">First</a>
+                          </li>
+                          <li class="page-item" th:if="${currentPage > 0}">
+                              <a class="page-link" th:href="@{[NomModeleLowerPluriel](page=${currentPage - 1})}">Previous</a>
+                          </li>
+                          <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:class="${currentPage == i} ? 'active'">
+                              <a class="page-link" th:href="@{[NomModeleLowerPluriel](page=${i})}" th:text="${i} + 1"></a>
+                          </li>
+                          <li class="page-item" th:if="${currentPage < totalPages - 1}">
+                              <a class="page-link" th:href="@{[NomModeleLowerPluriel](page=${currentPage + 1})}">Next</a>
+                          </li>
+                          <li class="page-item" th:if="${currentPage < totalPages - 1}">
+                              <a class="page-link" th:href="@{[NomModeleLowerPluriel](page=${totalPages - 1})}">Last</a>
+                          </li>
+                      </ul>
+                  </nav>
+      
+                  </div>
+                </div>
+      
+              </div>
+            </div>
+          </section>
+    </main>
+    
+    
+</body>
+</html>

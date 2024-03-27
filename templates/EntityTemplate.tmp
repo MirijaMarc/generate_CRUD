@@ -1,0 +1,11 @@
+package [package].entity;
+
+[imports]
+
+@Entity
+@Table(name = "[NomModeleLowerPluriel]")
+@Data
+public class [NomModeleUpper] {
+[AttributsEntity]
+
+}

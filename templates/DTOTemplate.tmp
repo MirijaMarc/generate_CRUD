@@ -1,0 +1,8 @@
+package [package].dto;
+
+[imports]
+
+@Data
+public class [NomModeleUpper]DTO {
+[AttributsDTO]
+}

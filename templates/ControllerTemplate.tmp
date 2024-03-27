@@ -1,0 +1,71 @@
+package [package].controller;
+
+[imports]
+
+import com.test_eval.Repository.[NomModeleUpper]Repository;
+import com.test_eval.dto.[NomModeleUpper]DTO;
+import com.test_eval.entity.[NomModeleUpper];
+
+
+@Controller
+@RequestMapping("[NomModeleLowerPluriel]")
+public class [NomModeleUpper]Controller {
+    
+    @Autowired
+    private [NomModeleUpper]Repository [NomModeleLower]Repository;
+
+[fieldsController]
+
+
+    @GetMapping
+    public ModelAndView findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int size){
+        ModelAndView mv = new ModelAndView("pages/[NomModeleLower]");
+        Pageable pageable = PageRequest.of(page, size);
+        Page<[NomModeleUpper]> pages = [NomModeleLower]Repository.findAll(pageable);
+        mv.addObject("[NomModeleLowerPluriel]", pages.getContent());
+        mv.addObject("currentPage", pages.getNumber());
+        mv.addObject("totalPages", pages.getTotalPages());
+[foreigns]
+        return mv;
+    }
+
+    @PostMapping(value = "import-csv")
+    public String importer(@RequestParam("file") MultipartFile file){
+        try {
+            ArrayList<[NomModeleUpper]> [NomModeleLowerPluriel] = Util.getData(file, [NomModeleUpper].class);
+            [NomModeleLower]Repository.saveAll([NomModeleLowerPluriel]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/[NomModeleLowerPluriel]";
+    }
+
+
+
+    @PostMapping
+    public String insert(@ModelAttribute [NomModeleUpper]DTO [NomModeleLower]DTO){
+        [NomModeleUpper] entity = new [NomModeleUpper]();
+[Setters]
+        [NomModeleLower]Repository.save(entity);
+        return "redirect:/[NomModeleLowerPluriel]";
+    }
+
+
+    @PostMapping("update")
+    public String update(int id, [NomModeleUpper]DTO [NomModeleLower]DTO){
+        [NomModeleUpper] entity = new [NomModeleUpper]();
+        entity.setId(id);
+[Setters]
+        [NomModeleLower]Repository.save(entity);
+        return "redirect:/[NomModeleLowerPluriel]";
+    }
+
+
+    @PostMapping("delete")
+    public String delete(int id){
+        [NomModeleLower]Repository.delete(id);
+        return "redirect:/[NomModeleLowerPluriel]";
+    }
+
+
+}
