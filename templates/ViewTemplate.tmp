@@ -12,38 +12,14 @@
         <section class="section">
             <div class="row">
               <div class="col-lg-6">
-    
                 <div class="card">
                   <div class="card-body">
-                    <button type="button" class="btn btn-primary mt-2"  data-bs-toggle="modal" data-bs-target="#basicModal">Importer</button>
-                    <div class="modal fade" id="basicModal" tabindex="-1">
-                      <form action="/[NomModeleLowerPluriel]/import-csv" method="post" enctype="multipart/form-data">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title">Importer fichier</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                              <div class="col-12">
-                                <label class="form-label">Fichier</label>
-                                <input type="file" class="form-control" name="file">
-                              </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
-                          </div>
-                        </div>
-                      </div>
-                      </form>
-                    </div><!-- End Basic Modal-->
                     <h5 class="card-title">Insertion</h5>
                     <form action="/[NomModeleLowerPluriel]" method="post" class="row g-3">
                       [InputsAjouter]
                       <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Insérer</button>
-                        <button type="reset" class="btn btn-secondary">Reset</button>
+                        <button type="submit" class="btn btn-outline-primary">Insérer</button>
+                        <button type="reset" class="btn btn-outline-secondary">Reset</button>
                       </div>
                     </form>
       
@@ -53,14 +29,18 @@
               </div>
             </div>
 
-
+            <div class="d-flex my-3" style="gap: 21px;">
+              <a href="/[NomModeleLowerPluriel]/export-pdf" type="button" class="btn btn-outline-primary" >Export PDF</a>
+              <a href="/[NomModeleLowerPluriel]/export-csv" type="button" class="btn btn-outline-info" >Export CSV</a>
+              <a href="/[NomModeleLowerPluriel]/export-excel" type="button" class="btn btn-outline-success" >Export Excel</a>
+            </div>
             <div class="row">
               <div class="col-lg-12">
       
-                <div class="card">
+                <div id="elementPDF" class="card">
                   <div class="card-body">
                     <h5 class="card-title">Liste [NomModeleUpperPluriel]</h5>
-                    <table class="table">
+                    <table class="table table-hover">
                       <thead>
                         <tr>
 [EnteteTable]
@@ -70,8 +50,8 @@
                         <tr th:each=" element : ${[NomModeleLowerPluriel]}">
 [LigneTables]
                           <td>
-                            <a data-bs-toggle="modal" th:data-bs-target= "'#modifier-' + ${element.id}" type="button" class="btn btn-primary btn-sm">Modifier</a>
-                            <a data-bs-toggle="modal" th:data-bs-target= "'#supprimer-' + ${element.id}" type="button" class="btn btn-danger btn-sm">Supprimer</a>                            
+                            <a data-bs-toggle="modal" th:data-bs-target= "'#modifier-' + ${element.id}" type="button" class="btn btn-outline-primary btn-sm">Modifier</a>
+                            <a data-bs-toggle="modal" th:data-bs-target= "'#supprimer-' + ${element.id}" type="button" class="btn btn btn-outline-danger btn-sm">Supprimer</a>                            
                           </td>
                         <div class="modal fade" th:id = "'modifier-' + ${element.id}" tabindex="-1">
                           <form action="/[NomModeleLowerPluriel]/update" method="post" class="row g-3">
@@ -86,8 +66,8 @@
                                   [InputsModifier]
                                 </div>
                                 <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                  <button type="submit" class="btn btn-warning">Modifier</button>
+                                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-outline-warning">Modifier</button>
                                 </div>
                               </div>
                             </div>
@@ -107,8 +87,8 @@
                                   Voulez vous vraiment Supprimer ?
                                 </div>
                                 <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                  <button type="submit" class="btn btn-danger">Supprimer</button>
+                                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-outline-danger">Supprimer</button>
                                 </div>
                               </div>
                             </div>

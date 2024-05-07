@@ -13,6 +13,7 @@ public class Constante {
     public static String InputNumberTemplatePath= "./templates/view/add/InputNumberTemplate.tmp";
     public static String InputTextTemplatePath= "./templates/view/add/InputTextTemplate.tmp";
     public static String InputSelectTemplatePath= "./templates/view/add/InputSelectTemplate.tmp";
+    public static String UtilTemplatePath="./templates/UtilTemplate.tmp";
 
     public static String InputDateTemplatePathUpdate= "./templates/view/update/InputDateTemplate.tmp";
     public static String InputDateTimeTemplatePathUpdate= "./templates/view/update/InputDateTimeTemplate.tmp";
@@ -26,10 +27,13 @@ public class Constante {
         import java.time.LocalDate;
         import java.time.format.DateTimeFormatter;
         import java.util.ArrayList;
+        import java.util.List;
+        import java.util.Optional;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.data.domain.Page;
         import org.springframework.data.domain.PageRequest;
         import org.springframework.data.domain.Pageable;
+        import org.springframework.http.MediaType;
         import org.springframework.stereotype.Controller;
         import org.springframework.web.bind.annotation.GetMapping;
         import org.springframework.web.bind.annotation.ModelAttribute;
@@ -38,7 +42,12 @@ public class Constante {
         import org.springframework.web.bind.annotation.RequestParam;
         import org.springframework.web.multipart.MultipartFile;
         import org.springframework.web.servlet.ModelAndView;
-        import com.test_eval.util.Util;
+        import [package].util.Util;
+        import jakarta.persistence.EntityManager;
+        import jakarta.servlet.http.HttpServletRequest;
+        import jakarta.persistence.PersistenceContext;
+        import jakarta.servlet.http.HttpServletRequest;
+        import jakarta.servlet.http.HttpServletResponse;
             """;
 
     public static String IMPORT_DTO = """

@@ -2,6 +2,7 @@ package util;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 
@@ -22,16 +23,31 @@ public class Util {
     }
 
 
+    public static void generateUtil()throws Exception{
+        String pathcsv = Configuration.getNodePackagePath().asText().split("/src")[0] + "/csv";
+        String pathUtil = Configuration.getNodePackagePath().asText() + "/util";
+        Path utilPath = Paths.get(pathUtil);
+        if (Files.exists(utilPath)) return;
+        System.out.println("Miditra");
+        createFolder(pathUtil);
+        createFolder(pathcsv);
+        String content = getFileContent(Constante.UtilTemplatePath);
+        content = content.replace("[projetPath]", Configuration.getNodePackagePath().asText().split("/src")[0]);
+        content = init(content);
+        createFile(pathUtil+ "/Util.java", content);
+    }
+
+
     public static void generateEntity(Connection con , String modele, String json)throws Exception{
         createFolder(Configuration.getNodePackagePath().asText() + "/entity");
         String modeleSingulier = singulier(modele);
         String fileName = toFirstUpper(modeleSingulier).concat(nodeExtension.get("java").asText());
         String content = getFileContent(Constante.EntityTemplatePath);
-        content = init(content);
         content = content.replace(nodeMotCle.get("NomModeleUpper").asText() , toFirstUpper(modeleSingulier));
         content = content.replace(nodeMotCle.get("NomModeleLowerPluriel").asText(), modele);
         content = content.replace(nodeMotCle.get("AttributsEntity").asText(), Database.fieldsEntity(con, modele , json));
         content = content.replace("[imports]", Constante.IMPORT_ENTITY);
+        content = init(content);
         createFile(Configuration.getNodePackagePath().asText() + "/entity/" + fileName, content);
     }
 
@@ -43,7 +59,6 @@ public class Util {
         String modeleSingulier = singulier(modele);
         String fileName= modeleSingulier.concat(nodeExtension.get("html").asText());
         String content = getFileContent(Constante.ViewTemplatePath);
-        content = init(content);
         content = content.replace(nodeMotCle.get("NomModeleUpper").asText(), toFirstUpper(modeleSingulier));
         content = content.replace(nodeMotCle.get("NomModeleLower").asText(), modeleSingulier);
         content = content.replace(nodeMotCle.get("NomModeleLowerPluriel").asText(), modele);
@@ -52,6 +67,7 @@ public class Util {
         content = content.replace(nodeMotCle.get("InputsModifier").asText(),Database.generateInputModifier(c, modele, json));
         content = content.replace(nodeMotCle.get("LignesTable").asText(),Database.generateLigneTable(c, modele, json));
         content = content.replace("[EnteteTable]", Database.generateEnteteTable(c, modele, json));
+        content = init(content);
         createFile(Configuration.getPackageViewPath() +"/"+ fileName, content);
     }
 
@@ -61,7 +77,6 @@ public class Util {
         String modeleSingulier = singulier(modele);
         String fileName = toFirstUpper(modeleSingulier).concat("Controller").concat(nodeExtension.get("java").asText());
         String content = getFileContent(Constante.ControllerTemplatePath);
-        content = init(content);
         content = content.replace(nodeMotCle.get("NomModeleUpper").asText(), toFirstUpper(modeleSingulier));
         content = content.replace(nodeMotCle.get("NomModeleLower").asText(), modeleSingulier);
         content = content.replace(nodeMotCle.get("NomModeleLowerPluriel").asText(), modele);
@@ -69,20 +84,22 @@ public class Util {
         content = content.replace("[foreigns]", Database.generateForeigns(con, modele));
         content = content.replace("[imports]", Constante.IMPORT_CONTROLLER);
         content = content.replace("[fieldsController]", Database.generateFieldsController(con, modele));
+        content = content.replace("[colonnes]", Database.getColonnes(con, modele));
+        content = init(content);
         createFile(Configuration.getNodePackagePath().asText() + "/controller/" + fileName , content);
 
     }
 
     public static void generateDTO(Connection con , String modele, String json)throws Exception{
-        createFolder(Configuration.getNodePackagePath().asText() + "/DTO");
+        createFolder(Configuration.getNodePackagePath().asText() + "/dto");
         String modeleSingulier = singulier(modele);
         String fileName = toFirstUpper(modeleSingulier).concat("DTO").concat(nodeExtension.get("java").asText());
         String content = getFileContent(Constante.DTOTemplatePath);
-        content = init(content);
         content = content.replace(nodeMotCle.get("NomModeleUpper").asText(), toFirstUpper(modeleSingulier));
         content = content.replace(nodeMotCle.get("AttributsDTO").asText(), Database.fieldsDTO(con, modele , json));
         content = content.replace("[imports]", Constante.IMPORT_DTO);
-        createFile(Configuration.getNodePackagePath().asText() + "/DTO/" + fileName, content);
+        content = init(content);
+        createFile(Configuration.getNodePackagePath().asText() + "/dto/" + fileName, content);
     }
 
 
@@ -91,11 +108,11 @@ public class Util {
         String modeleSingulier = singulier(modele);
         String fileName = toFirstUpper(modeleSingulier).concat("Repository").concat(nodeExtension.get("java").asText());
         String content = getFileContent(Constante.RepoTemplatePath);
-        content = init(content);
         content = content.replace(nodeMotCle.get("NomModeleUpper").asText(), toFirstUpper(modeleSingulier));
         content = content.replace(nodeMotCle.get("NomModeleLower").asText(), modeleSingulier.toLowerCase());
         content = content.replace(nodeMotCle.get("NomModeleLowerPluriel").asText(), modele);
         content = content.replace("[imports]", Constante.IMPORT_REPO);
+        content = init(content);
         createFile(Configuration.getNodePackagePath().asText() + "/repository/" + fileName, content);
     }
 

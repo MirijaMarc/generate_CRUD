@@ -24,6 +24,7 @@ public class App {
             Util.generateController(c,tableChoisie, pathMap);
             Util.generateView(c, tableChoisie, pathMap);
             Util.generateEntity(c, tableChoisie, pathMap);
+            Util.generateUtil();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -32,11 +33,10 @@ public class App {
 
         // try {
         //     c = Database.getConnection();
-        //     System.out.println(Database.generateLigneTable(c, "pilotes", "mapping.json"));
+        //     System.out.println(Database.getColonnes(c, "pilotes"));
 
         // } catch (Exception e) {
         //     e.printStackTrace();
-        //     // TODO: handle exception
         // }
         // finally{
         //     c.close();

@@ -17,6 +17,11 @@ public class Database {
 
 
 
+    public static void main(String[] args) {
+        String h = "abc";
+        System.out.println(h.substring(0, h.length()-2));
+    }
+
     public static Connection getConnection() throws Exception{
         Connection con = null;
         Class.forName("org.postgresql.Driver");
@@ -28,6 +33,22 @@ public class Database {
         String database = jsonNode.get("database").get("database").asText(); 
         con = DriverManager.getConnection("jdbc:postgresql://"+server+":"+port+"/"+ database ,username,password);
         return con;
+    }
+
+
+
+    public static String getColonnes(Connection c, String nomTable)throws Exception{
+        Table table = getDetails(c, nomTable);
+        String temp="";
+        for (Colonne colonne : table.getColonnes()) {
+            if (!(colonne.is_etat || colonne.is_primary)){
+                temp = temp + colonne.nom;
+                temp = temp + ",";
+            }
+        }
+        temp = temp.substring(0, temp.length()-1);
+        String rep = "(rep)";
+        return rep.replace("rep", temp);
     }
 
 
@@ -79,6 +100,7 @@ public class Database {
             builder.append(content);
             builder.append("\n");
         }
+        builder.append("<th>Actions</th>");
         return builder.toString();
 
     } 
@@ -217,9 +239,9 @@ public class Database {
         String nom, setter, getter;
         for (Colonne colonne : table.getColonnes()) {
             nom = Util.toFirstUpper(colonne.getNomMap(json));
-            if (!colonne.is_primary ||  colonne.is_etat){
+            if (!colonne.is_primary &&  !colonne.is_etat){
                 setter = set.concat(nom).concat("([getter])");
-                if (nom.equalsIgnoreCase("date")){
+                if (nom.contains("Date")){
                     String temp = Util.singulier(nomTable).concat(dto).concat(get).concat(nom).concat("()");
                     String conversion = colonne.type +"""
                         .parse([temp], DateTimeFormatter.ofPattern("[pattern]"))""";
@@ -254,7 +276,7 @@ public class Database {
                 builder.append(attribut);
             }else{
                 if (colonne.is_foreign){
-                    String attribut = Constante.ATTRIBUT_JOIN.formatted(colonne.getNom(), Util.toFirstUpper(Util.singulier(colonne.getForeign_table_name())), Util.singulier(colonne.getForeign_table_name()));
+                    String attribut = Constante.ATTRIBUT_JOIN.formatted(colonne.getNom(), Util.toFirstUpper(Util.singulier(colonne.getForeign_table_name())),colonne.getNomMap(json));
                     builder.append(attribut);
                 }else{
                     String attribut = Constante.ATTRIBUT.formatted(colonne.getNom(), colonne.getType(), colonne.getNomMap(json));

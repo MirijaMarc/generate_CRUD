@@ -2,14 +2,22 @@ package [package].controller;
 
 [imports]
 
-import com.test_eval.Repository.[NomModeleUpper]Repository;
-import com.test_eval.dto.[NomModeleUpper]DTO;
-import com.test_eval.entity.[NomModeleUpper];
+import [package].repository.[NomModeleUpper]Repository;
+import [package].dto.[NomModeleUpper]DTO;
+import [package].entity.[NomModeleUpper];
+import [package].util.ExportCsv;
+import [package].util.ExportExcel;
+import [package].security.NoSession;
 
 
 @Controller
 @RequestMapping("[NomModeleLowerPluriel]")
 public class [NomModeleUpper]Controller {
+
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     
     @Autowired
     private [NomModeleUpper]Repository [NomModeleLower]Repository;
@@ -17,55 +25,117 @@ public class [NomModeleUpper]Controller {
 [fieldsController]
 
 
+
     @GetMapping
-    public ModelAndView findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int size){
+    public ModelAndView findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int size,@RequestParam Optional<String> error, HttpServletRequest request){
         ModelAndView mv = new ModelAndView("pages/[NomModeleLower]");
         Pageable pageable = PageRequest.of(page, size);
         Page<[NomModeleUpper]> pages = [NomModeleLower]Repository.findAll(pageable);
         mv.addObject("[NomModeleLowerPluriel]", pages.getContent());
         mv.addObject("currentPage", pages.getNumber());
         mv.addObject("totalPages", pages.getTotalPages());
+        mv.addObject("isLoged", Util.isLoged(request));
+        if (Util.isLoged(request)){
+            Utilisateur user = (Utilisateur)request.getSession().getAttribute("user");
+            mv.addObject("role", user.getRole());
+        }
+        if (error.isPresent()) mv.addObject("error", error.get());
 [foreigns]
         return mv;
     }
 
+
+
     @PostMapping(value = "import-csv")
-    public String importer(@RequestParam("file") MultipartFile file){
+    public ModelAndView importer(@RequestParam("file") MultipartFile file){
+        ModelAndView mv = new ModelAndView("redirect:/[NomModeleLowerPluriel]");
         try {
-            ArrayList<[NomModeleUpper]> [NomModeleLowerPluriel] = Util.getData(file, [NomModeleUpper].class);
-            [NomModeleLower]Repository.saveAll([NomModeleLowerPluriel]);
+            String colonnes = "[colonnes]";
+            String path = Util.CSV_PATH;
+            String filePath= path + "/"+ file.getOriginalFilename();
+            Util.importer(entityManager, colonnes, filePath);
         } catch (Exception e) {
             e.printStackTrace();
+            mv.addObject("error", e.getMessage());
+            return mv;
         }
-        return "redirect:/[NomModeleLowerPluriel]";
+        return mv;
     }
 
 
 
     @PostMapping
-    public String insert(@ModelAttribute [NomModeleUpper]DTO [NomModeleLower]DTO){
+    public ModelAndView insert(@ModelAttribute [NomModeleUpper]DTO [NomModeleLower]DTO){
+        ModelAndView mv = new ModelAndView("redirect:/[NomModeleLowerPluriel]");
         [NomModeleUpper] entity = new [NomModeleUpper]();
 [Setters]
         [NomModeleLower]Repository.save(entity);
-        return "redirect:/[NomModeleLowerPluriel]";
+        return mv;
     }
 
 
+
+
     @PostMapping("update")
-    public String update(int id, [NomModeleUpper]DTO [NomModeleLower]DTO){
+    public ModelAndView update(int id, [NomModeleUpper]DTO [NomModeleLower]DTO){
+        ModelAndView mv = new ModelAndView("redirect:/[NomModeleLowerPluriel]");
         [NomModeleUpper] entity = new [NomModeleUpper]();
         entity.setId(id);
 [Setters]
         [NomModeleLower]Repository.save(entity);
-        return "redirect:/[NomModeleLowerPluriel]";
+        return mv;
     }
+
+
 
 
     @PostMapping("delete")
-    public String delete(int id){
+    public ModelAndView delete(int id){
+        ModelAndView mv = new ModelAndView("redirect:/[NomModeleLowerPluriel]");
         [NomModeleLower]Repository.delete(id);
-        return "redirect:/[NomModeleLowerPluriel]";
+        return mv;
     }
+
+
+    @GetMapping("export-pdf")
+    public void exportPDF(HttpServletResponse response){
+        try {
+            response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+
+    @GetMapping("export-csv")
+    public void exportCSV(HttpServletResponse response){
+        try {
+            response.setContentType("text/csv");
+            response.addHeader("Content-Disposition", "attachment; filename=documentCSV.csv");
+            List<[NomModeleUpper]> [NomModeleLowerPluriel] = [NomModeleLower]Repository.findAll();
+            new ExportCsv().writeToCsv([NomModeleLowerPluriel], response.getWriter());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @GetMapping("export-excel")
+    public void exportXL(HttpServletResponse response){
+        try {
+            response.setContentType("application/octet-stream");
+            String headerKey = "Content-Disposition";
+            String headerValue = "attachment; filename=documentExcel.xlsx";
+            response.setHeader(headerKey, headerValue);
+            List<[NomModeleUpper]> [NomModeleLowerPluriel] = [NomModeleLower]Repository.findAll();
+            ExportExcel<[NomModeleUpper]> generator = new ExportExcel<>([NomModeleLowerPluriel]);
+            generator.generateExcelFile(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 }

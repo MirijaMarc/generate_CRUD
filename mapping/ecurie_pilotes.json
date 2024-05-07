@@ -1,0 +1,8 @@
+{
+   "object":{
+        "idecurie" : "ecurie",
+        "idpilote" : "pilote",
+        "date_insertion": "dateInsertion"
+   },
+   "view": false
+}

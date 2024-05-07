@@ -1,6 +1,6 @@
 {
-    "packageName": "com.test_eval",
-    "packagePath": "E:/Mirija/ITU/S5/MrRojo/TEST/eval/eval_test/src/main/java/com/test_eval",
+    "packageName": "com.evaluation.Eval",
+    "packagePath": "E:/Mirija/ITU/S6/evaluation/Eval_Mai/src/main/java/com/evaluation/Eval",
     "MotCle":{
         "NomModeleUpper": "[NomModeleUpper]",
         "NomModeleLower": "[NomModeleLower]",
