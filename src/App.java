@@ -19,12 +19,12 @@ public class App {
             String index = scanner.nextLine();
             String tableChoisie = tables.get(Integer.parseInt(index)-1);
             String pathMap = "./mapping/%s.json".formatted(tableChoisie); 
-            Util.generateRepository(tableChoisie);
-            Util.generateDTO(c, tableChoisie, pathMap);
+            // Util.generateRepository(c,tableChoisie, pathMap);
+            // Util.generateDTO(c, tableChoisie, pathMap);
             Util.generateController(c,tableChoisie, pathMap);
             Util.generateView(c, tableChoisie, pathMap);
-            Util.generateEntity(c, tableChoisie, pathMap);
-            Util.generateUtil();
+            // Util.generateEntity(c, tableChoisie, pathMap);
+            // Util.generateUtil();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

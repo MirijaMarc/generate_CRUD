@@ -1,9 +1,0 @@
-{
-   "object":{
-        "idgrandprix": "grandprix",
-        "idpilote": "pilote",
-        "temps_course": "temps",
-        "date_grand_prix": "date"
-   },
-   "view": false
-}

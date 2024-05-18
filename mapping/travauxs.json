@@ -1,0 +1,10 @@
+{
+   "object":{
+        "idtype_travaux": "type_travaux",
+        "code_travaux": "code",
+        "nom_travaux": "nom",
+        "unite_travaux": "unite",
+        "prix_unitaire": "prixUnitaire"
+   },
+   "view": true
+}

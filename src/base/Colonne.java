@@ -29,11 +29,19 @@ public class Colonne {
     }
 
 
-    public String getNomMap(String json)throws Exception{
+    public String getNomMap(String json){
         if (this.is_primary) return "id";
         if (this.is_etat) return "etat";
-        JsonNode jsonNode = Util.getNode(json).get("object");
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = Util.getNode(json);
+            jsonNode = jsonNode.get("object");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getNom();
+        }
         JsonNode map = jsonNode.get(getNom());
+        System.out.println(map);
         if (map == null) return getNom();
         return map.asText();
     }

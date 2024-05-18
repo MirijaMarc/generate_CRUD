@@ -22,15 +22,31 @@ public class [NomModeleUpper]Controller {
     @Autowired
     private [NomModeleUpper]Repository [NomModeleLower]Repository;
 
+    @Autowired
+    private SpringTemplateEngine templateEngine;
+
 [fieldsController]
 
 
 
     @GetMapping
-    public ModelAndView findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int size,@RequestParam Optional<String> error, HttpServletRequest request){
+    public ModelAndView findAll(PageRequestDTO pageRequestDTO,@RequestParam Optional<String> search,@RequestParam Optional<String> error, HttpServletRequest request){
         ModelAndView mv = new ModelAndView("pages/[NomModeleLower]");
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize());
+        mv.addObject("sortBy", pageRequestDTO.getSortBy());
+        if (!pageRequestDTO.getSortBy().equalsIgnoreCase("default")){
+            Sort sort = Sort.by(pageRequestDTO.getDirection(), pageRequestDTO.getSortBy());
+            pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize(), sort);
+        }
         Page<[NomModeleUpper]> pages = [NomModeleLower]Repository.findAll(pageable);
+        if (search.isPresent()){
+            pages = [NomModeleLower]Repository.findAll(pageable, search.get().trim());
+            if (search.get().split("\\s+").length >0){
+                pages = [NomModeleUpper].findAllMultiMot(entityManager, pageable, search.get());
+            }
+            mv.addObject("search", search.get());
+        }
+        mv.addObject("direction", pageRequestDTO.getDirectionString());
         mv.addObject("[NomModeleLowerPluriel]", pages.getContent());
         mv.addObject("currentPage", pages.getNumber());
         mv.addObject("totalPages", pages.getTotalPages());
@@ -51,7 +67,7 @@ public class [NomModeleUpper]Controller {
         ModelAndView mv = new ModelAndView("redirect:/[NomModeleLowerPluriel]");
         try {
             String colonnes = "[colonnes]";
-            String path = Util.CSV_PATH;
+            String path = Constante.CSV_PATH;
             String filePath= path + "/"+ file.getOriginalFilename();
             Util.importer(entityManager, colonnes, filePath);
         } catch (Exception e) {
@@ -97,13 +113,29 @@ public class [NomModeleUpper]Controller {
     }
 
 
-    @GetMapping("export-pdf")
-    public void exportPDF(HttpServletResponse response){
-        try {
-            response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
+    @GetMapping("/export-pdf")
+    public ResponseEntity<byte[]> exportPdf() throws Exception {
+        Context context = new Context();
+        List<[NomModeleUpper]> [NomModeleLowerPluriel] = [NomModeleLower]Repository.findAll();
+        context.setVariable("[NomModeleLowerPluriel]", [NomModeleLowerPluriel]);
+
+        String html = templateEngine.process("pdf/export-[NomModeleLower].html", context);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        ITextRenderer renderer = new ITextRenderer();
+        renderer.setDocumentFromString(html);
+        renderer.layout();
+
+        renderer.createPDF(outputStream);
+
+        byte[] pdfBytes = outputStream.toByteArray();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("filename", "export-[NomModeleLower].pdf");
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 
 
@@ -111,7 +143,7 @@ public class [NomModeleUpper]Controller {
     public void exportCSV(HttpServletResponse response){
         try {
             response.setContentType("text/csv");
-            response.addHeader("Content-Disposition", "attachment; filename=documentCSV.csv");
+            response.addHeader("Content-Disposition", "attachment; filename=export-[NomModeleLower].csv");
             List<[NomModeleUpper]> [NomModeleLowerPluriel] = [NomModeleLower]Repository.findAll();
             new ExportCsv().writeToCsv([NomModeleLowerPluriel], response.getWriter());
         } catch (Exception e) {
@@ -125,7 +157,7 @@ public class [NomModeleUpper]Controller {
         try {
             response.setContentType("application/octet-stream");
             String headerKey = "Content-Disposition";
-            String headerValue = "attachment; filename=documentExcel.xlsx";
+            String headerValue = "attachment; filename=export-[NomModeleLower].xlsx";
             response.setHeader(headerKey, headerValue);
             List<[NomModeleUpper]> [NomModeleLowerPluriel] = [NomModeleLower]Repository.findAll();
             ExportExcel<[NomModeleUpper]> generator = new ExportExcel<>([NomModeleLowerPluriel]);

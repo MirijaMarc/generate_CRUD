@@ -53,7 +53,14 @@ public class Util {
 
 
     public static void generateView(Connection c, String modele, String json)throws Exception{
-        Boolean bool = getNode(json).get("view").asBoolean();
+        Boolean bool = true;
+        try {
+            if (getNode(json).get("view")!= null){
+                bool = getNode(json).get("view").asBoolean();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (!bool.booleanValue()) return;
         createFolder(Configuration.getPackageViewPath());
         String modeleSingulier = singulier(modele);
@@ -67,6 +74,7 @@ public class Util {
         content = content.replace(nodeMotCle.get("InputsModifier").asText(),Database.generateInputModifier(c, modele, json));
         content = content.replace(nodeMotCle.get("LignesTable").asText(),Database.generateLigneTable(c, modele, json));
         content = content.replace("[EnteteTable]", Database.generateEnteteTable(c, modele, json));
+        content = content.replace("[optionsTrier]", Database.generateOptionsTrier(c, modele, json));
         content = init(content);
         createFile(Configuration.getPackageViewPath() +"/"+ fileName, content);
     }
@@ -103,7 +111,7 @@ public class Util {
     }
 
 
-    public static void generateRepository(String modele)throws Exception{
+    public static void generateRepository(Connection con ,String modele, String json)throws Exception{
         createFolder(Configuration.getNodePackagePath().asText() + "/repository");
         String modeleSingulier = singulier(modele);
         String fileName = toFirstUpper(modeleSingulier).concat("Repository").concat(nodeExtension.get("java").asText());
@@ -112,6 +120,7 @@ public class Util {
         content = content.replace(nodeMotCle.get("NomModeleLower").asText(), modeleSingulier.toLowerCase());
         content = content.replace(nodeMotCle.get("NomModeleLowerPluriel").asText(), modele);
         content = content.replace("[imports]", Constante.IMPORT_REPO);
+        content = content.replace("[requete]", Database.generateRequeteSearch(con, modele, json));
         content = init(content);
         createFile(Configuration.getNodePackagePath().asText() + "/repository/" + fileName, content);
     }

@@ -105,6 +105,49 @@ public class Database {
 
     } 
 
+
+    public static String generateRequeteSearch(Connection c, String nomTable, String json)throws Exception{
+        StringBuilder builder = new StringBuilder();
+        Table table = getDetails(c, nomTable);
+        String debut = "SELECT * from "+ nomTable + " WHERE ";
+        builder.append(debut);
+        int i = 0;
+        for (Colonne colonne : table.getColonnes()) {
+            String content = "";
+            if (!colonne.isIs_etat() && !colonne.is_primary){
+                content = "CAST([name] as varchar) ILIKE %:search% OR ";
+                if (i == table.getColonnes().size()-2) content = "CAST([name] as varchar) ILIKE %:search%";
+                content =content.replace("[name]", colonne.getNom());
+            }
+            builder.append(content);
+            builder.append("\n");
+            i++;
+        }
+        return builder.toString();
+
+    } 
+
+    public static String generateOptionsTrier(Connection c, String nomTable, String json)throws Exception{
+        StringBuilder builder = new StringBuilder();
+        Table table = getDetails(c, nomTable);
+        for (Colonne colonne : table.getColonnes()) {
+
+            String content = "";
+            if (!colonne.isIs_etat()){
+                content = """
+                    <option value="[value]" th:selected="${ sortBy == '[value]'}">[name]</option>
+                        """;
+                
+                content =content.replace("[value]", colonne.getNom());
+                content =content.replace("[name]", colonne.getNomMap(json));
+            }
+            builder.append(content);
+            builder.append("\n");
+        }
+        return builder.toString();
+
+    } 
+
     public static String generateLigneTable(Connection c, String nomTable, String json)throws Exception{
         StringBuilder builder = new StringBuilder();
         Table table = getDetails(c, nomTable);
@@ -265,7 +308,7 @@ public class Database {
         return builder.toString();
         
     }
-
+        
 
     public static String fieldsEntity(Connection c, String nomTable, String json)throws Exception{
         StringBuilder builder = new StringBuilder();
@@ -294,6 +337,7 @@ public class Database {
         for (Colonne colonne : table.getColonnes()) {
             String type = colonne.getType();
             if (colonne.getType().contains("LocalDate")) type = "String";
+            System.out.println(colonne.getNomMap(json));
             String temp = Constante.FIELD_DTO.formatted(type, colonne.getNomMap(json));
             builder.append(temp); 
         }

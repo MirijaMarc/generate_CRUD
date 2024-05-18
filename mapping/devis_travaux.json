@@ -1,0 +1,8 @@
+{
+   "object":{
+        "iddevis": "devis",
+        "idtrauvaux" : "travaux",
+        "prix_unitaire": "prixUnitaire"
+   },
+   "view": false
+}   

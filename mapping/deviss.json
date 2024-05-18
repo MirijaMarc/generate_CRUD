@@ -1,0 +1,14 @@
+{
+   "object":{
+        "numero_devis": "numero",
+        "idmaison": "maison",
+        "idfinition": "finition",
+        "iduser": "utilisateur",
+        "montant": "montantTotal",
+        "finition": "finitionPourcentage",
+        "duree": "dureeTravaux",
+        "date_devis": "date",
+        "date_debut_travaux": "dateDebutTravaux"
+   },
+   "view": true
+}

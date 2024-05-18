@@ -29,8 +29,12 @@ public class Constante {
         import java.util.ArrayList;
         import java.util.List;
         import java.util.Optional;
+        import org.springframework.http.ResponseEntity;
+        import org.thymeleaf.context.Context;
+        import org.thymeleaf.spring6.SpringTemplateEngine;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.data.domain.Page;
+        import org.springframework.data.domain.Sort;
         import org.springframework.data.domain.PageRequest;
         import org.springframework.data.domain.Pageable;
         import org.springframework.http.MediaType;
@@ -43,11 +47,17 @@ public class Constante {
         import org.springframework.web.multipart.MultipartFile;
         import org.springframework.web.servlet.ModelAndView;
         import [package].util.Util;
+        import [package].util.Constante;
         import jakarta.persistence.EntityManager;
         import jakarta.servlet.http.HttpServletRequest;
         import jakarta.persistence.PersistenceContext;
         import jakarta.servlet.http.HttpServletRequest;
         import jakarta.servlet.http.HttpServletResponse;
+        import com.itextpdf.io.source.ByteArrayOutputStream;
+        import org.xhtmlrenderer.pdf.ITextRenderer;
+        import org.springframework.http.HttpHeaders;
+        import org.springframework.http.HttpStatus;
+        import [package].dto.PageRequestDTO;
             """;
 
     public static String IMPORT_DTO = """
@@ -68,6 +78,10 @@ public class Constante {
         import jakarta.persistence.JoinColumn;
         import jakarta.persistence.ManyToOne;
         import lombok.Data;
+        import org.springframework.data.domain.Page;
+        import org.springframework.data.domain.PageImpl;
+        import org.springframework.data.domain.Pageable;
+        import java.util.List;
             """;
 
     public static String IMPORT_REPO = """

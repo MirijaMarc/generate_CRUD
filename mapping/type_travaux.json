@@ -1,0 +1,7 @@
+{
+   "object":{
+        "nom_type_travaux": "nom",
+        "code_type_travaux": "code"
+   },
+   "view": true
+}

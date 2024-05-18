@@ -6,6 +6,12 @@ import [package].entity.[NomModeleUpper];
 
 @Repository
 public interface [NomModeleUpper]Repository extends JpaRepository<[NomModeleUpper], Integer> {
+
+    
+    @Query(nativeQuery = true, value = """
+            [requete]
+            """)
+    public Page<[NomModeleUpper]> findAll(Pageable pageable, String search);
     
     @Query(nativeQuery = true, value = """
         SELECT * FROM [NomModeleLowerPluriel] where etat_[NomModeleLower]>=0    

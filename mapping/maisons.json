@@ -1,0 +1,8 @@
+{
+   "object":{
+        "nom_maison": "nom",
+        "description_maison": "description",
+        "duree_construction": "duree"
+   },
+   "view": true
+}

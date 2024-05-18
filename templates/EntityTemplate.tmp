@@ -1,5 +1,7 @@
 package [package].entity;
 
+import [package].util.Util;
+
 [imports]
 
 @Entity
@@ -8,4 +10,15 @@ package [package].entity;
 public class [NomModeleUpper] {
 [AttributsEntity]
 
+
+
+    public static Page<[NomModeleUpper]> findAllMultiMot(EntityManager entityManager, Pageable pageable, String mot) {
+        Query query = entityManager.createNativeQuery(Util.createRequeteMultiMot([NomModeleUpper].class, mot), [NomModeleUpper].class);
+        List<[NomModeleUpper]> resultList = query.getResultList();
+        long count = resultList.size();
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+        resultList = query.getResultList();
+        return new PageImpl<>(resultList, pageable, count);
+    }
 }

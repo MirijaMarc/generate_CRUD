@@ -4,13 +4,15 @@
         "port": 5432,
         "username": "postgres",
         "password": "root",
-        "database": "f1_v2"
+        "database": "construction"
     },
     "types":{
         "integer":"int",
         "character varying":"String",
         "real":"double",
         "double":"double",
+        "double precision":"double",
+        "text": "String",
         "decimal":"double",
         "numeric":"double",
         "date":"LocalDate",

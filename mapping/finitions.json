@@ -1,7 +1,6 @@
 {
    "object":{
-        "nom_grand_prix": "nom"
-
+        "nom_finition": "nom"
    },
    "view": true
 }
